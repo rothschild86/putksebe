@@ -84,12 +84,13 @@
 <div class="overlayDiv">
   	<input type="file" accept="image/*" onchange="loadFile(event)" id="file" class="inputfile" />
 	<label for="file">Загрузить фото</label>
-	<p>Используйте квадратное фото ☝️</p>
 
 	<img id="overlay-img" src="plain.png"/>
 </div>
 	<script>
+	
 	  var loadFile = function(event) {
+				
 	    var reader = new FileReader();
 	    reader.onload = function() {
 	      createOverlay(reader.result);
@@ -97,14 +98,28 @@
 	    reader.readAsDataURL(event.target.files[0]);
 	  };
 
-	var createOverlay = function(uploadImage) {
-	  	var baseImg = uploadImage;
+	var createOverlay = function(result) {
+	
+		var minDimension;
+		var uploaded = new Image();
+		uploaded.src = result;
+		uploaded.onload = function(){
+			minDimension = Math.min(uploaded.width, uploaded.height);
+		}
+		
+		var sqCanvas = document.createElement('canvas');
+		var ctx = sqCanvas.getContext('2d');
+		ctx.drawImage(uploaded, 0, 0, minDimension, minDimension, 0, 0, minDimension, minDimension);
+		
+		var uploadedSq = sqCanvas.toDataURL("image/jpeg", 0.8);
+	  	
 	  	Caman("#overlay-img", function () {
+		
 			this.brightness(5).render();
 			this.newLayer(function() {
 			    this.setBlendingMode("normal");
 			    this.opacity(100);
-			    this.overlayImage(baseImg);
+			    this.overlayImage(uploadedSq);
 		  	});
 
 		  	this.newLayer(function() {
