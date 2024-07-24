@@ -111,7 +111,8 @@
 		var ctx = sqCanvas.getContext('2d');
 		ctx.drawImage(uploaded, 0, 0, minDimension, minDimension, 0, 0, minDimension, minDimension);
 		
-		var uploadedSq = sqCanvas.toDataURL("image/jpeg", 0.8);
+		var uploadedSq = new Image();
+		uploadedSq.src = sqCanvas.toDataURL("image/jpeg", 0.8);
 	  	
 	  	Caman("#overlay-img", function () {
 		
