@@ -147,14 +147,17 @@
 	var createOverlay = function(uploadImage) {
 	
 		crop(uploadImage, 1).then((cropped) => {
-		// `cropped` is the resulting image
+		// `cropped` is the resulting image canvas
+		
+		const croppedImg = new Image();
+		croppedImg.src = cropped.toDataURL();
 	
 		  	Caman("#overlay-img", function () {
 			this.brightness(5).render();
 			this.newLayer(function() {
 			    this.setBlendingMode("normal");
 			    this.opacity(100);
-			    this.overlayImage(cropped);
+			    this.overlayImage(croppedImg);
 		  	});
 
 		  	this.newLayer(function() {
