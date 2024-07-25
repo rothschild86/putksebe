@@ -86,7 +86,7 @@
   	<input type="file" accept="image/*" onchange="loadFile(event)" id="file" class="inputfile" />
 	<label for="file">Загрузить фото</label>
 
-	<img id="overlay-img" src="plain.png"/>
+	<img id="overlay-img" src="plain.png" onclick="doSaveAs()" />
 </div>
 	<script>
 	
@@ -136,7 +136,7 @@
     });
 }
 	
-	  var loadFile = function(event) {
+	var loadFile = function(event) {
 	    var reader = new FileReader();
 	    reader.onload = function() {
 	      createOverlay(reader.result);
@@ -147,7 +147,6 @@
 	var createOverlay = function(uploadImage) {
 	
 		crop(uploadImage, 1).then((cropped) => {
-		// `cropped` is the resulting image canvas
 		
 		const croppedImg = new Image();
 		croppedImg.src = cropped.toDataURL();
@@ -170,10 +169,28 @@
 		});
 
 		$('#overlay-img').removeAttr('style');
-});
-
-
+	});
 	};
+	
+	var doSaveAs = function(){
+		
+	var e;
+    var lnk = document.createElement('a');
+    
+    lnk.download = 'photo.png';
+    lnk.href = ($('#overlay-img')[0]).toDataURL();
+    
+    if (document.createEvent) {
+        e = document.createEvent("MouseEvents");
+        e.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        lnk.dispatchEvent(e);
+    }
+    else if (lnk.fireEvent) {
+        lnk.fireEvent("onclick");
+    }
+	
+	};
+	
 	</script>
 
 
